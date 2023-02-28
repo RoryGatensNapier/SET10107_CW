@@ -32,7 +32,8 @@ public class StartNoGui {
 		Parameters.setDataSet(DataSet.Training);
 		
 		
-		//Create a new Neural Network Trainer Using the above parameters 
+		//Create a new Neural Network Trainer Using the above parameters
+		//	This is where to change the function to implement the HillClimber if needed
 		NeuralNetwork nn = new ExampleEvolutionaryAlgorithm();		
 		
 		//train the neural net (Go and make a coffee) 

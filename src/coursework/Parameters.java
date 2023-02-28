@@ -32,6 +32,7 @@ public class Parameters {
 	public static Random random = new Random(seed);
 
 	// set the NeuralNetwork class here to use your code from the GUI
+	//	Change for GUI implementation, non-GUI requires another method
 	public static Class neuralNetworkClass = ExampleHillClimber.class;
 
 	/**
