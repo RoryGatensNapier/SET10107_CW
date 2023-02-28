@@ -122,8 +122,22 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	 * member of the population
 	 */
 	private Individual select() {		
-		Individual parent = getBest();
+		Individual parent = tournamentSelection();
 		return parent.copy();
+	}
+
+	private Individual tournamentSelection() {
+		Individual best = new Individual();
+		int sizeMod = 6;
+		Random rng = new Random();
+		for (int i = 0; i < population.size()/sizeMod; i++) {
+			Individual prospect = population.get(rng.nextInt(0, population.size() - 1));
+			if (best.fitness < prospect.fitness)
+			{
+				best = prospect.copy();
+			}
+		}
+		return best;
 	}
 
 	/**
