@@ -149,20 +149,17 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	private ArrayList<Individual> reproduce(Individual parent1, Individual parent2) {
 		ArrayList<Individual> children = new ArrayList<>();
 		Random rng = new Random();
-		int numChildren = rng.nextInt(1, 2);
 		float geneLen = Parameters.getNumGenes();
-		//for (int kids = 0; kids < numChildren; kids++) {
-			Individual newChild = new Individual();
-			for (int i = 0; i < geneLen; i++) {
-				if (parent1.chromosome[i] < parent2.chromosome[i] /*|| i >= Math.ceil(geneLen * res2)*/) {
-					newChild.chromosome[i] = parent1.chromosome[i];
-				}
-				else {
-					newChild.chromosome[i] = parent2.chromosome[i];
-				}
+		Individual newChild = new Individual();
+		for (int i = 0; i < geneLen; i++) {
+			if (parent1.chromosome[i] < parent2.chromosome[i] /*|| i >= Math.ceil(geneLen * res2)*/) {
+				newChild.chromosome[i] = parent1.chromosome[i];
 			}
-			children.add(newChild);
-		//}
+			else {
+				newChild.chromosome[i] = parent2.chromosome[i];
+			}
+		}
+		children.add(newChild);
 		return children;
 	} 
 	

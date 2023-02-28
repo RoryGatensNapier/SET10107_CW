@@ -33,7 +33,7 @@ public class Parameters {
 
 	// set the NeuralNetwork class here to use your code from the GUI
 	//	Change for GUI implementation, non-GUI requires another method
-	public static Class neuralNetworkClass = ExampleHillClimber.class;
+	public static Class neuralNetworkClass = ExampleEvolutionaryAlgorithm.class;
 
 	/**
 	 * Do not change any methods that appear below here.
