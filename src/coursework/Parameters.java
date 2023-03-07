@@ -18,21 +18,20 @@ public class Parameters {
 	public static double minGene = -3; // specifies minimum and maximum weight values
 	public static double maxGene = +3;
 
-	public static int popSize = 200;
+	public static int popSize = 35;
 	public static int maxEvaluations = 20000;
 
 	// Parameters for mutation
 	// Rate = probability of changing a gene
 	// Change = the maximum +/- adjustment to the gene value
-	public static double mutateRate = 0.01; // 0.01 mutation rate for mutation operator
-	public static double mutateChange = 0.16; // delta change for mutation operator
+	public static double mutateRate = 0.175; // 0.01 mutation rate for mutation operator
+	public static double mutateChange = 0.1; // delta change for mutation operator
 
 	// Random number generator used throughout the application
 	public static long seed = System.currentTimeMillis();
 	public static Random random = new Random(seed);
 
 	// set the NeuralNetwork class here to use your code from the GUI
-	//	Change for GUI implementation, non-GUI requires another method
 	public static Class neuralNetworkClass = ExampleEvolutionaryAlgorithm.class;
 
 	/**
