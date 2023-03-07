@@ -46,7 +46,7 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 			Individual parent1 = select(); 
 			Individual parent2 = select();
 
-			// Generate a child by crossover. Implemented
+			// Generate a child by crossover. Not Implemented			
 			ArrayList<Individual> children = reproduce(parent1, parent2);			
 			
 			//mutate the offspring
@@ -89,7 +89,7 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	 * 
 	 */
 	private Individual getBest() {
-		best = null;
+		best = null;;
 		for (Individual individual : population) {
 			if (best == null) {
 				best = individual.copy();
@@ -121,23 +121,19 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	 * NEEDS REPLACED with proper selection this just returns a copy of a random
 	 * member of the population
 	 */
-	private Individual select() {		
-		Individual parent = tournamentSelection();
-		return parent.copy();
-	}
-
-	private Individual tournamentSelection() {
-		Individual best = new Individual();
-		int sizeMod = 5;
+	private Individual select() {
 		Random rng = new Random();
-		for (int i = 0; i < population.size()/sizeMod; i++) {
-			Individual prospect = population.get(rng.nextInt(0, population.size() - 1));
-			if (best.fitness < prospect.fitness)
+		Individual parent = population.get(rng.nextInt(0, population.size()));
+
+		for (int size = 0; size < (population.size()/10); size++)
+		{
+			if (population.get(rng.nextInt(0, population.size())).fitness < parent.fitness)
 			{
-				best = prospect.copy();
+				parent = population.get(size);
 			}
 		}
-		return best;
+
+		return parent.copy();
 	}
 
 	/**
@@ -148,10 +144,7 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	 */
 	private ArrayList<Individual> reproduce(Individual parent1, Individual parent2) {
 		ArrayList<Individual> children = new ArrayList<>();
-		Random rng = new Random();
-		int geneLen = Parameters.getNumGenes();
-		int ptOfX1 = rng.nextInt(0, geneLen/3 - 1);
-		int ptOfX2 = rng.nextInt((geneLen/3) - 1, (2 * geneLen/3) - 1);
+		float geneLen = Parameters.getNumGenes();
 		Individual newChild = new Individual();
 		for (int i = 0; i < geneLen; i++) {
 			if (parent1.chromosome[i] < parent2.chromosome[i]) {
@@ -161,6 +154,10 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 				newChild.chromosome[i] = parent2.chromosome[i];
 			}
 		}
+//		for (int i = 0; i < geneLen; i++)
+//		{
+//			newChild.chromosome[i] = (parent1.chromosome[i] <= newChild.chromosome[i]) ? parent1.chromosome[i] : parent2.chromosome[i];
+//		}
 		children.add(newChild);
 		return children;
 	} 
@@ -193,7 +190,10 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	private void replace(ArrayList<Individual> individuals) {
 		for(Individual individual : individuals) {
 			int idx = getWorstIndex();		
-			population.set(idx, individual);
+			if (individual.fitness < population.get(idx).fitness)
+			{
+				population.set(idx, individual);
+			}
 		}		
 	}
 
@@ -221,9 +221,9 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 
 	@Override
 	public double activationFunction(double x) {
-		if (x < -20.0) {
+		if (x < -1.5) {
 			return -1.0;
-		} else if (x > 20.0) {
+		} else if (x > 1.5) {
 			return 1.0;
 		}
 		return Math.tanh(x);
