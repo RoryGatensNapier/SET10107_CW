@@ -6,8 +6,6 @@ import model.NeuralNetwork;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-enum BitwiseHack { TRUE, FALSE };
-
 class ExampleEvolutionaryAlgorithmTest {
 
     @org.junit.jupiter.api.Test
