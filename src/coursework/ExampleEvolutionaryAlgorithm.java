@@ -22,6 +22,9 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	private boolean shouldSaveOutput = true;
 	public void setShouldSaveOutput(boolean isEnabled) { shouldSaveOutput = isEnabled; };
 
+	private boolean shouldDisplayInitBest = true;
+	public void setShouldDisplayInitBest(boolean isEnabled) { shouldDisplayInitBest = isEnabled; };
+
 
 	/**
 	 * The Main Evolutionary Loop
