@@ -16,6 +16,15 @@ import model.NeuralNetwork;
  */
 public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	
+	private boolean shouldOutputStats = true;
+	public void setConsoleOutput(boolean isEnabled) { shouldOutputStats = isEnabled; };
+
+	private boolean shouldSaveOutput = true;
+	public void setShouldSaveOutput(boolean isEnabled) { shouldSaveOutput = isEnabled; };
+
+	private boolean shouldDisplayInitBest = true;
+	public void setShouldDisplayInitBest(boolean isEnabled) { shouldDisplayInitBest = isEnabled; };
+
 
 	/**
 	 * The Main Evolutionary Loop
@@ -61,14 +70,20 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 			// check to see if the best has improved
 			best = getBest();
 			
-			// Implemented in NN class. 
-			outputStats();
+			// Implemented in NN class.
+			if (shouldOutputStats)
+			{
+				outputStats();
+			}
 			
 			//Increment number of completed generations			
 		}
 
 		//save the trained network to disk
-		saveNeuralNetwork();
+		if (shouldSaveOutput)
+		{
+			saveNeuralNetwork();
+		}
 	}
 
 	
