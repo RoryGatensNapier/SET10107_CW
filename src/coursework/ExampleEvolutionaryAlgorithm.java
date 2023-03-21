@@ -36,7 +36,10 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 
 		//Record a copy of the best Individual in the population
 		best = getBest();
-		System.out.println("Best From Initialisation " + best);
+		if (shouldDisplayInitBest)
+		{
+			System.out.println("Best From Initialisation " + best);
+		}
 
 		/**
 		 * main EA processing loop
