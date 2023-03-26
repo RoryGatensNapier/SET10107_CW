@@ -143,13 +143,13 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 		Random rng = new Random();
 		Individual parent = population.get(rng.nextInt(0, population.size()));
 
-		for (int size = 0; size < (population.size()/10); size++)
-		{
-			if (population.get(rng.nextInt(0, population.size())).fitness < parent.fitness)
-			{
-				parent = population.get(size);
-			}
-		}
+//		for (int size = 0; size < (population.size()/10); size++)
+//		{
+//			if (population.get(rng.nextInt(0, population.size())).fitness < parent.fitness)
+//			{
+//				parent = population.get(size);
+//			}
+//		}
 
 		return parent.copy();
 	}

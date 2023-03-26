@@ -31,7 +31,7 @@ class ExampleEvolutionaryAlgorithmTest {
 
     @org.junit.jupiter.api.Test
     void run() throws Exception {
-        File csvFile = new File("results.csv");
+        //File csvFile = new File("results.csv");
 
         ExampleEvolutionaryAlgorithm evo = new ExampleEvolutionaryAlgorithm();
         evo.setConsoleOutput(false);
@@ -42,62 +42,39 @@ class ExampleEvolutionaryAlgorithmTest {
         assertEquals(20000, Parameters.maxEvaluations);
 
         int _popMod = 0;
-        int _hdlyrMod = -4;
-        double _mcMod = -0.1;
-        double _mrMod = -0.01;
-        int bitmask = 1;
+        double _mcMod = 0;
+        double _mrMod = 0;
 
         ArrayList<SetupConfig> configs = new ArrayList<SetupConfig>();
 
-        while (bitmask < 16)
+        while (_popMod < 181)
         {
-            int pop = 20 + (_popMod * (bitmask & 8));
-            int hiddenLayers = 5 + (_hdlyrMod * (bitmask & 4));
-            double mutationChange = 0.1 + (_mcMod * (bitmask & 2));
-            double mutationRate = 0.01 + (_mrMod * (bitmask & 1));
-            ParamSetup(pop, hiddenLayers, mutationChange, mutationRate); // Default set up!
+            //System.out.println("Current setup - Pop = " + (20 + _popMod) + ", MutationChange = " + (_mcMod) + ", MutationRate = " + (_mrMod));
+            ParamSetup(20 + _popMod, 5, _mcMod, _mrMod); // Default set up!
             double fitness = runningOrder(evo);
+            //System.out.println("Fitness found = " + fitness);
+            configs.add(new SetupConfig(20 + _popMod, 5, _mcMod, _mrMod, fitness));
 
-            if ((_popMod >= 180) || (_hdlyrMod >= 0) || (_mcMod >= 0.9) || (_mrMod >= 0.99)) {
-                bitmask += 1;
-                System.out.println("State = " + bitmask);
-            }
-
-            if ((bitmask & 8) == 1) {
+            if (_mcMod < 0.99)
+            {
+                if (_mrMod < 0.9) {
+                    _mrMod += 0.1;
+                } else {
+                    _mcMod += 0.05;
+                    _mrMod = 0.0;
+                }
+            } else {
                 _popMod += 1;
+                _mcMod = 0.0;
+                _mrMod = 0.0;
             }
-            else {
-                _popMod = 0;
-            }
-            if ((bitmask & 4) == 1) {
-                _hdlyrMod += 1;
-            }
-            else {
-                _hdlyrMod = -4;
-            }
-            if ((bitmask & 2) == 1) {
-                _mcMod += 0.01;
-            }
-            else {
-                _mcMod = 0;
-            }
-            if ((bitmask & 1) == 1) {
-                _mrMod += 0.01;
-            }
-            else {
-                _mrMod = 0;
-            }
-
-            configs.add(new SetupConfig(pop, hiddenLayers, mutationChange, mutationRate, fitness));
         }
 
-        Collections.sort(configs, new Comparator<SetupConfig>() {
-            @Override
-            public int compare(SetupConfig o1, SetupConfig o2) {
-                return o1.Fitness < o2.Fitness ? 1 : 0;
-            }
+        Collections.sort(configs, (o1, o2) -> {
+            return Double.compare(o1.Fitness, o2.Fitness);
         });
-        System.out.println("Best fitness found = " + configs.get(0).Fitness);
+        System.out.println("Done! Best fitness found = " + configs.get(0).Fitness);
+        System.out.println("Config - Pop = " + configs.get(0).Population + ", Hidden Layers = " + configs.get(0).HiddenLayers + ", Mutation Change = " + configs.get(0).MutationChange + ", Mutation Rate = " + configs.get(0).MutationRate);
     }
 
     void ParamSetup(int PopulationSize, int HiddenLayers, double MutationChange, double MutationRate) {
