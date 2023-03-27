@@ -1,6 +1,7 @@
 package coursework;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import model.Fitness;
@@ -14,6 +15,29 @@ import model.NeuralNetwork;
  * You Can Use This Class to implement your EA or implement your own class that extends {@link NeuralNetwork} 
  * 
  */
+
+enum CrossoverProcess {
+	BestChromosome,
+	OnePoint,
+	TwoPoint,
+	RandomCrossover
+}
+
+enum MutationProcess {
+	Change,
+	Swap
+}
+
+enum ReplacementProcess {
+	Random,
+	Tournament,
+	Worst
+}
+enum SelectionProcess {
+	Tournament,
+	Random
+}
+
 public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	
 	private boolean shouldOutputStats = true;
@@ -25,7 +49,26 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	private boolean shouldDisplayInitBest = true;
 	public void setShouldDisplayInitBest(boolean isEnabled) { shouldDisplayInitBest = isEnabled; };
 
+	private CrossoverProcess crossoverProcess = CrossoverProcess.BestChromosome;
+	public void setCrossoverProcess(CrossoverProcess crossoverProcess) {
+		this.crossoverProcess = crossoverProcess;
+	}
+	
+	private MutationProcess mutationProcess = MutationProcess.Change;
+	public void setMutationProcess(MutationProcess mutationProcess) {
+		this.mutationProcess = mutationProcess;
+	}
 
+	private ReplacementProcess replacementProcess = ReplacementProcess.Worst;
+	public void setReplacementProcess(ReplacementProcess replacementProcess) {
+		this.replacementProcess = replacementProcess;
+	}
+
+	private SelectionProcess selectionProcess = SelectionProcess.Random;
+	public void setSelectionProcess(SelectionProcess selectionProcess) {
+		this.selectionProcess = selectionProcess;
+	}
+	
 	/**
 	 * The Main Evolutionary Loop
 	 */
@@ -141,15 +184,23 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	 */
 	private Individual select() {
 		Random rng = new Random();
-		Individual parent = population.get(rng.nextInt(0, population.size()));
+		Individual parent = new Individual();
+		switch (selectionProcess)
+		{
+			case Tournament:
+				parent = population.get(rng.nextInt(population.size()));
 
-//		for (int size = 0; size < (population.size()/10); size++)
-//		{
-//			if (population.get(rng.nextInt(0, population.size())).fitness < parent.fitness)
-//			{
-//				parent = population.get(size);
-//			}
-//		}
+				for (int size = 0; size < (population.size() / 10); size++) {
+					if (population.get(rng.nextInt(population.size())).fitness < parent.fitness) {
+						parent = population.get(size);
+					}
+				}
+				break;
+
+			case Random:
+				parent = population.get(rng.nextInt(population.size()));
+				break;
+		}
 
 		return parent.copy();
 	}
@@ -162,20 +213,57 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	 */
 	private ArrayList<Individual> reproduce(Individual parent1, Individual parent2) {
 		ArrayList<Individual> children = new ArrayList<>();
-		float geneLen = Parameters.getNumGenes();
+		int geneLen = Parameters.getNumGenes();
 		Individual newChild = new Individual();
-		for (int i = 0; i < geneLen; i++) {
-			if (parent1.chromosome[i] < parent2.chromosome[i]) {
-				newChild.chromosome[i] = parent1.chromosome[i];
-			}
-			else {
-				newChild.chromosome[i] = parent2.chromosome[i];
-			}
+		Random rng = new Random();
+		switch (crossoverProcess)
+		{
+			case BestChromosome:
+				for (int i = 0; i < geneLen; i++) {
+					if (parent1.chromosome[i] < parent2.chromosome[i]) {
+						newChild.chromosome[i] = parent1.chromosome[i];
+					} else {
+						newChild.chromosome[i] = parent2.chromosome[i];
+					}
+				}
+				break;
+
+			case OnePoint:
+				int cutPoint = rng.nextInt(geneLen - 1) + 1;
+				for (int x = 0; x < geneLen; ++x) {
+					if (x < cutPoint) {
+						newChild.chromosome[x] = parent1.chromosome[x];
+					}
+					else {
+						newChild.chromosome[x] = parent2.chromosome[x];
+					}
+				}
+				break;
+
+			case TwoPoint:
+				int[] cutPoints = { (rng.nextInt(geneLen - 1) + 1), (rng.nextInt(geneLen - 1) + 1) };
+				Arrays.sort(cutPoints);
+
+				for (int x = 0; x < geneLen; ++x) {
+					if (x > cutPoints[0] && x < cutPoints[1]) {
+						newChild.chromosome[x] = parent2.chromosome[x];
+					}
+					else {
+						newChild.chromosome[x] = parent1.chromosome[x];
+					}
+				}
+				break;
+				
+			case RandomCrossover:
+				for (int x = 0; x < geneLen; ++x) {
+					if (rng.nextBoolean()) {
+						newChild.chromosome[x] = parent1.chromosome[x];
+					}
+					else {
+						newChild.chromosome[x] = parent2.chromosome[x];
+					}
+				}
 		}
-//		for (int i = 0; i < geneLen; i++)
-//		{
-//			newChild.chromosome[i] = (parent1.chromosome[i] <= newChild.chromosome[i]) ? parent1.chromosome[i] : parent2.chromosome[i];
-//		}
 		children.add(newChild);
 		return children;
 	} 
@@ -187,16 +275,30 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	 */
 	private void mutate(ArrayList<Individual> individuals) {		
 		for(Individual individual : individuals) {
-			for (int i = 0; i < individual.chromosome.length; i++) {
-				if (Parameters.random.nextDouble() < Parameters.mutateRate) {
-					if (Parameters.random.nextBoolean()) {
-						individual.chromosome[i] += (Parameters.mutateChange);
-					} else {
-						individual.chromosome[i] -= (Parameters.mutateChange);
+			switch (mutationProcess) {
+				case Change:
+					for (int i = 0; i < individual.chromosome.length; i++) {
+						if (Parameters.random.nextDouble() < Parameters.mutateRate) {
+							if (Parameters.random.nextBoolean()) {
+								individual.chromosome[i] += (Parameters.mutateChange);
+							} else {
+								individual.chromosome[i] -= (Parameters.mutateChange);
+							}
+						}
 					}
-				}
+					break;
+				case Swap:
+					Random rng = new Random();
+					int pos1 = rng.nextInt(Parameters.getNumGenes());
+					int pos2 = rng.nextInt(Parameters.getNumGenes());
+					if (pos1 != pos2) {
+						double temp = individual.chromosome[pos1];
+						individual.chromosome[pos1] = individual.chromosome[pos2];
+						individual.chromosome[pos2] = temp;
+					}
+					break;
 			}
-		}		
+		}
 	}
 
 	/**
