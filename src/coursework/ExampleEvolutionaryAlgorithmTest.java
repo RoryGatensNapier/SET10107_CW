@@ -5,6 +5,7 @@ import model.Fitness;
 import model.LunarParameters;
 import model.NeuralNetwork;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.util.*;
 
@@ -87,7 +88,16 @@ class ExampleEvolutionaryAlgorithmTest {
         //  Print best fitness and configuration
         System.out.println("Done! Best fitness found = " + configs.get(0).Fitness);
         System.out.println("Config - Pop = " + configs.get(0).Population + ", Hidden Layers = " + configs.get(0).HiddenLayers + ", Mutation Change = " + configs.get(0).MutationChange + ", Mutation Rate = " + configs.get(0).MutationRate);
-        gson.toJson(configs, new FileWriter("ConfigurationFiles/configResults_" + java.time.LocalDateTime.now() + ".json"));
+        File directory = new File("ConfigLogs");
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+        String fileToWrite = directory + "/configResults_"
+                + evo.getCrossoverProcess().toString() + "_"
+                + evo.getMutationProcess().toString() + "_"
+                + evo.getReplacementProcess().toString() + "_"
+                + evo.getSelectionProcess().toString() + "_" + ".json";
+        gson.toJson(configs, new FileWriter(fileToWrite));
     }
 
     //  Function to configure the EA parameters
