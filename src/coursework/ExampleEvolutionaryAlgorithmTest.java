@@ -1,15 +1,16 @@
 package coursework;
 
+import com.google.gson.*;
 import model.Fitness;
 import model.LunarParameters;
 import model.NeuralNetwork;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+//  Class definition for storing the configurations generated
 class SetupConfig {
     int Population = 0;
     int HiddenLayers = 0;
@@ -31,21 +32,30 @@ class ExampleEvolutionaryAlgorithmTest {
 
     @org.junit.jupiter.api.Test
     void run() throws Exception {
-        //File csvFile = new File("results.csv");
-
+        //  Configure processes used in EA
         ExampleEvolutionaryAlgorithm evo = new ExampleEvolutionaryAlgorithm();
         evo.setConsoleOutput(false);
         evo.setShouldSaveOutput(false);
         evo.setShouldDisplayInitBest(false);
 
+        evo.setCrossoverProcess(CrossoverProcess.BestChromosome);
+        evo.setMutationProcess(MutationProcess.Change);
+        evo.setReplacementProcess(ReplacementProcess.Tournament);
+        evo.setSelectionProcess(SelectionProcess.Tournament);
+
+        //  Ensure that maxEvaluation is set to the strict limit of 20k
         Parameters.maxEvaluations = 20000; // Used to terminate the EA after this many generations (does not change)
         assertEquals(20000, Parameters.maxEvaluations);
 
+        //  Set up modifiers for parameter configurations
         int _popMod = 0;
         double _mcMod = 0;
         double _mrMod = 0;
 
+        //  Set up configuration list
         ArrayList<SetupConfig> configs = new ArrayList<SetupConfig>();
+
+        Gson gson = new Gson();
 
         while (_popMod < 181)
         {
@@ -69,14 +79,18 @@ class ExampleEvolutionaryAlgorithmTest {
                 _mrMod = 0.0;
             }
         }
-
+        //  Custom sorting method to compare all the configurations by fitness
         Collections.sort(configs, (o1, o2) -> {
             return Double.compare(o1.Fitness, o2.Fitness);
         });
+
+        //  Print best fitness and configuration
         System.out.println("Done! Best fitness found = " + configs.get(0).Fitness);
         System.out.println("Config - Pop = " + configs.get(0).Population + ", Hidden Layers = " + configs.get(0).HiddenLayers + ", Mutation Change = " + configs.get(0).MutationChange + ", Mutation Rate = " + configs.get(0).MutationRate);
+        gson.toJson(configs, new FileWriter("ConfigurationFiles/configResults_" + java.time.LocalDateTime.now() + ".json"));
     }
 
+    //  Function to configure the EA parameters
     void ParamSetup(int PopulationSize, int HiddenLayers, double MutationChange, double MutationRate) {
         Parameters.popSize = PopulationSize;
         Parameters.setHidden(HiddenLayers);
@@ -84,6 +98,7 @@ class ExampleEvolutionaryAlgorithmTest {
         Parameters.mutateRate = MutationRate;
     }
 
+    //  Function that handles running the EA training/evaluation
     double runningOrder(NeuralNetwork nn) {
         //Set the data set for training
         Parameters.setDataSet(LunarParameters.DataSet.Training);
@@ -103,24 +118,5 @@ class ExampleEvolutionaryAlgorithmTest {
         double fitness = Fitness.evaluate(nn);
         //System.out.println("Fitness on " + Parameters.getDataSet() + " " + fitness);
         return fitness;
-    }
-
-    public void toCSV(String[] strings, String csvFile) throws Exception {
-        FileWriter fileWriter = new FileWriter(csvFile);
-
-        //write header line here if you need.
-
-        StringBuilder line = new StringBuilder();
-        for (int i = 0; i < strings.length; i++) {
-            line.append("\"");
-            line.append(strings[i].replaceAll("\"","\"\""));
-            line.append("\"");
-            if (i != strings.length - 1) {
-                line.append(',');
-            }
-        }
-        line.append("\n");
-        fileWriter.write(line.toString());
-        fileWriter.close();
     }
 }
