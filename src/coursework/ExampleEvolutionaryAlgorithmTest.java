@@ -39,7 +39,7 @@ class ExampleEvolutionaryAlgorithmTest {
         evo.setShouldSaveOutput(false);
         evo.setShouldDisplayInitBest(false);
 
-        evo.setCrossoverProcess(CrossoverProcess.BestChromosome);
+        evo.setCrossoverProcess(CrossoverProcess.OnePoint);
         evo.setMutationProcess(MutationProcess.Change);
         evo.setReplacementProcess(ReplacementProcess.Tournament);
         evo.setSelectionProcess(SelectionProcess.Tournament);
