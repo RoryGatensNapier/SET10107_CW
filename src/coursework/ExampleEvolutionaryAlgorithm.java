@@ -50,21 +50,25 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	public void setShouldDisplayInitBest(boolean isEnabled) { shouldDisplayInitBest = isEnabled; };
 
 	private CrossoverProcess crossoverProcess = CrossoverProcess.BestChromosome;
+	public CrossoverProcess getCrossoverProcess() { return this.crossoverProcess; }
 	public void setCrossoverProcess(CrossoverProcess crossoverProcess) {
 		this.crossoverProcess = crossoverProcess;
 	}
 	
 	private MutationProcess mutationProcess = MutationProcess.Change;
+	public MutationProcess getMutationProcess() { return this.mutationProcess; }
 	public void setMutationProcess(MutationProcess mutationProcess) {
 		this.mutationProcess = mutationProcess;
 	}
 
 	private ReplacementProcess replacementProcess = ReplacementProcess.Worst;
+	public ReplacementProcess getReplacementProcess() { return this.replacementProcess; }
 	public void setReplacementProcess(ReplacementProcess replacementProcess) {
 		this.replacementProcess = replacementProcess;
 	}
 
 	private SelectionProcess selectionProcess = SelectionProcess.Random;
+	public SelectionProcess getSelectionProcess() { return this.selectionProcess; }
 	public void setSelectionProcess(SelectionProcess selectionProcess) {
 		this.selectionProcess = selectionProcess;
 	}
