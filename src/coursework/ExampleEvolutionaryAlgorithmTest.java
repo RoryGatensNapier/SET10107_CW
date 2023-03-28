@@ -1,6 +1,7 @@
 package coursework;
 
 import com.google.gson.*;
+import com.google.gson.stream.JsonWriter;
 import model.Fitness;
 import model.LunarParameters;
 import model.NeuralNetwork;
@@ -39,7 +40,7 @@ class ExampleEvolutionaryAlgorithmTest {
         evo.setShouldSaveOutput(false);
         evo.setShouldDisplayInitBest(false);
 
-        evo.setCrossoverProcess(CrossoverProcess.OnePoint);
+        evo.setCrossoverProcess(CrossoverProcess.TwoPoint);
         evo.setMutationProcess(MutationProcess.Change);
         evo.setReplacementProcess(ReplacementProcess.Tournament);
         evo.setSelectionProcess(SelectionProcess.Tournament);
@@ -57,12 +58,13 @@ class ExampleEvolutionaryAlgorithmTest {
         ArrayList<SetupConfig> configs = new ArrayList<SetupConfig>();
 
         Gson gson = new Gson();
-
+        //Random rng = new Random();
         while (_popMod < 181)
         {
             //System.out.println("Current setup - Pop = " + (20 + _popMod) + ", MutationChange = " + (_mcMod) + ", MutationRate = " + (_mrMod));
             ParamSetup(20 + _popMod, 5, _mcMod, _mrMod); // Default set up!
             double fitness = runningOrder(evo);
+            //double fitness = rng.nextDouble(0, 1);
             //System.out.println("Fitness found = " + fitness);
             configs.add(new SetupConfig(20 + _popMod, 5, _mcMod, _mrMod, fitness));
 
@@ -97,7 +99,23 @@ class ExampleEvolutionaryAlgorithmTest {
                 + evo.getMutationProcess().toString() + "_"
                 + evo.getReplacementProcess().toString() + "_"
                 + evo.getSelectionProcess().toString() + "_" + ".json";
-        gson.toJson(configs, new FileWriter(fileToWrite));
+        //gson.toJson(configs, new FileWriter(fileToWrite));
+
+        try (JsonWriter writer = new JsonWriter(new FileWriter(fileToWrite))) {
+            writer.beginArray();
+                for (SetupConfig s : configs) {
+                    writer.beginObject();
+                    writer.name("Population").value(s.Population);
+                    writer.name("HiddenLayers").value(s.HiddenLayers);
+                    writer.name("MutationChange").value(s.MutationChange);
+                    writer.name("MutationRate").value(s.MutationRate);
+                    writer.name("Fitness").value(s.Fitness);
+                    writer.endObject();
+                }
+            writer.endArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //  Function to configure the EA parameters
