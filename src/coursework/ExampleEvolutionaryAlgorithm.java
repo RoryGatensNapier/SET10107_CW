@@ -312,13 +312,35 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	 * 
 	 */
 	private void replace(ArrayList<Individual> individuals) {
-		for(Individual individual : individuals) {
-			int idx = getWorstIndex();		
-			if (individual.fitness < population.get(idx).fitness)
-			{
-				population.set(idx, individual);
-			}
-		}		
+		switch (replacementProcess)
+		{
+			case Random:
+				for (Individual individual: individuals) {
+					Random rng = new Random();
+					int idx = rng.nextInt(population.size());
+					population.set(idx, individual);
+				}
+				break;
+
+			case Tournament:
+				for (Individual individual: individuals) {
+					Random rng = new Random();
+					int idx = rng.nextInt(population.size());
+					if (individual.fitness > population.get(idx).fitness) {
+						population.set(idx, individual);
+					}
+				}
+				break;
+
+			case Worst:
+				for (Individual individual : individuals) {
+					int idx = getWorstIndex();
+					if (individual.fitness < population.get(idx).fitness) {
+						population.set(idx, individual);
+					}
+				}
+				break;
+		}
 	}
 
 	
