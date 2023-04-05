@@ -73,25 +73,25 @@ class ExampleEvolutionaryAlgorithmTest {
         {
             switch (m) {
                 case Crossover:
-                    for (int i = 0; i < testRuns; ++i) {
+                    for (int i = 0; i <= testRuns; ++i) {
                         CrossoverTesting(evo, configs);
                     }
                     break;
 
                 case Mutation:
-                    for (int i = 0; i < testRuns; ++i) {
+                    for (int i = 0; i <= testRuns; ++i) {
                         MutationTesting(evo, configs);
                     }
                     break;
 
                 case Replacement:
-                    for (int i = 0; i < testRuns; ++i){
+                    for (int i = 0; i <= testRuns; ++i){
                         ReplacementTesting(evo, configs);
                     }
                     break;
 
                 case Selection:
-                    for (int i = 0; i < testRuns; ++i) {
+                    for (int i = 0; i <= testRuns; ++i) {
                         SelectionTesting(evo, configs);
                     }
                     break;
@@ -220,28 +220,28 @@ class ExampleEvolutionaryAlgorithmTest {
         ParamSetup(defaultPop, defaultHiddenLayers, defaultMC, defaultMR);
 
         evo.setCrossoverProcess(CrossoverProcess.BestChromosome);
-        for (int i = 0; i < testRuns; ++i)
+        for (int i = 0; i <= testRuns; ++i)
         {
             double fitness = runningOrder(evo);
             configs.add(new SetupConfig(defaultPop, defaultHiddenLayers, defaultMC, defaultMR, fitness, evo.getCrossoverProcess(), evo.getMutationProcess(), evo.getReplacementProcess(), evo.getSelectionProcess()));
         }
 
         evo.setCrossoverProcess(CrossoverProcess.RandomCrossover);
-        for (int i = 0; i < testRuns; ++i)
+        for (int i = 0; i <= testRuns; ++i)
         {
             double fitness = runningOrder(evo);
             configs.add(new SetupConfig(defaultPop, defaultHiddenLayers, defaultMC, defaultMR, fitness, evo.getCrossoverProcess(), evo.getMutationProcess(), evo.getReplacementProcess(), evo.getSelectionProcess()));
         }
 
         evo.setCrossoverProcess(CrossoverProcess.OnePoint);
-        for (int i = 0; i < testRuns; ++i)
+        for (int i = 0; i <= testRuns; ++i)
         {
             double fitness = runningOrder(evo);
             configs.add(new SetupConfig(defaultPop, defaultHiddenLayers, defaultMC, defaultMR, fitness, evo.getCrossoverProcess(), evo.getMutationProcess(), evo.getReplacementProcess(), evo.getSelectionProcess()));
         }
 
         evo.setCrossoverProcess(CrossoverProcess.TwoPoint);
-        for (int i = 0; i < testRuns; ++i) {
+        for (int i = 0; i <= testRuns; ++i) {
             double fitness = runningOrder(evo);
             configs.add(new SetupConfig(defaultPop, defaultHiddenLayers, defaultMC, defaultMR, fitness, evo.getCrossoverProcess(), evo.getMutationProcess(), evo.getReplacementProcess(), evo.getSelectionProcess()));
         }
@@ -254,14 +254,14 @@ class ExampleEvolutionaryAlgorithmTest {
         ParamSetup(defaultPop, defaultHiddenLayers, defaultMC, defaultMR);
 
         evo.setMutationProcess(MutationProcess.Swap);
-        for (int i = 0; i < testRuns; ++i)
+        for (int i = 0; i <= testRuns; ++i)
         {
             double fitness = runningOrder(evo);
             configs.add(new SetupConfig(defaultPop, defaultHiddenLayers, defaultMC, defaultMR, fitness, evo.getCrossoverProcess(), evo.getMutationProcess(), evo.getReplacementProcess(), evo.getSelectionProcess()));
         }
 
         evo.setMutationProcess(MutationProcess.Change);
-        for (int i = 0; i < testRuns; ++i) {
+        for (int i = 0; i <= testRuns; ++i) {
             double fitness = runningOrder(evo);
             configs.add(new SetupConfig(defaultPop, defaultHiddenLayers, defaultMC, defaultMR, fitness, evo.getCrossoverProcess(), evo.getMutationProcess(), evo.getReplacementProcess(), evo.getSelectionProcess()));
         }
@@ -274,7 +274,7 @@ class ExampleEvolutionaryAlgorithmTest {
         ParamSetup(defaultPop, defaultHiddenLayers, defaultMC, defaultMR);
 
         evo.setReplacementProcess(ReplacementProcess.Random);
-        for (int i = 0; i < testRuns; ++i)
+        for (int i = 0; i <= testRuns; ++i)
         {
             double fitness = runningOrder(evo);
             configs.add(new SetupConfig(defaultPop, defaultHiddenLayers, defaultMC, defaultMR, fitness, evo.getCrossoverProcess(), evo.getMutationProcess(), evo.getReplacementProcess(), evo.getSelectionProcess()));
@@ -282,14 +282,14 @@ class ExampleEvolutionaryAlgorithmTest {
 
 
         evo.setReplacementProcess(ReplacementProcess.Tournament);
-        for (int i = 0; i < testRuns; ++i)
+        for (int i = 0; i <= testRuns; ++i)
         {
             double fitness = runningOrder(evo);
             configs.add(new SetupConfig(defaultPop, defaultHiddenLayers, defaultMC, defaultMR, fitness, evo.getCrossoverProcess(), evo.getMutationProcess(), evo.getReplacementProcess(), evo.getSelectionProcess()));
         }
 
         evo.setReplacementProcess(ReplacementProcess.Worst);
-        for (int i = 0; i < testRuns; ++i)
+        for (int i = 0; i <= testRuns; ++i)
         {
             double fitness = runningOrder(evo);
             configs.add(new SetupConfig(defaultPop, defaultHiddenLayers, defaultMC, defaultMR, fitness, evo.getCrossoverProcess(), evo.getMutationProcess(), evo.getReplacementProcess(), evo.getSelectionProcess()));
@@ -303,14 +303,14 @@ class ExampleEvolutionaryAlgorithmTest {
         ParamSetup(defaultPop, defaultHiddenLayers, defaultMC, defaultMR);
 
         evo.setSelectionProcess(SelectionProcess.Random);
-        for (int i = 0; i < testRuns; ++i)
+        for (int i = 0; i <= testRuns; ++i)
         {
             double fitness = runningOrder(evo);
             configs.add(new SetupConfig(defaultPop, defaultHiddenLayers, defaultMC, defaultMR, fitness, evo.getCrossoverProcess(), evo.getMutationProcess(), evo.getReplacementProcess(), evo.getSelectionProcess()));
         }
 
         evo.setSelectionProcess(SelectionProcess.Tournament);
-        for (int i = 0; i < testRuns; ++i)
+        for (int i = 0; i <= testRuns; ++i)
         {
             double fitness = runningOrder(evo);
             configs.add(new SetupConfig(defaultPop, defaultHiddenLayers, defaultMC, defaultMR, fitness, evo.getCrossoverProcess(), evo.getMutationProcess(), evo.getReplacementProcess(), evo.getSelectionProcess()));
