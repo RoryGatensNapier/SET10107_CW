@@ -18,7 +18,7 @@ public class Parameters {
 	public static double minGene = -3; // specifies minimum and maximum weight values
 	public static double maxGene = +3;
 
-	public static int popSize = 35;
+	public static int popSize = 40;
 	public static int maxEvaluations = 20000;
 
 	// Parameters for mutation
