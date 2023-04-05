@@ -192,11 +192,18 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 		switch (selectionProcess)
 		{
 			case Tournament:
-				parent = population.get(rng.nextInt(population.size()));
+				ArrayList<Individual> parents = new ArrayList<Individual>();
 
-				for (int size = 0; size < (population.size() / 10); size++) {
-					if (population.get(rng.nextInt(population.size())).fitness < parent.fitness) {
-						parent = population.get(size);
+				for (int i = 0; i < 16; ++i)
+				{
+					parents.add(population.get(rng.nextInt(population.size())));
+				}
+				parent = parents.get(0);
+				for (int i = 0; i < parents.size(); ++i)
+				{
+					if (parents.get(i).fitness < parent.fitness)
+					{
+						parent = parents.get(i);
 					}
 				}
 				break;
