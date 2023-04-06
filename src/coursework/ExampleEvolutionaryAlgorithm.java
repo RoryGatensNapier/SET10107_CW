@@ -101,11 +101,11 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 			 * 
 			 */
 
-			// Select 2 Individuals from the current population. Currently returns random Individual
+			// Select 2 Individuals from the current population.
 			Individual parent1 = select(); 
 			Individual parent2 = select();
 
-			// Generate a child by crossover. Not Implemented			
+			// Generate a child by crossover
 			ArrayList<Individual> children = reproduce(parent1, parent2);			
 			
 			//mutate the offspring
