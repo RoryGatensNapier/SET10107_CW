@@ -58,6 +58,7 @@ class ExampleEvolutionaryAlgorithmTest {
     void run() throws Exception {
         //  Configure processes used in EA
         boolean shouldSort = true;
+        boolean multiConfigTesting = true;
 
         ExampleEvolutionaryAlgorithm evo = new ExampleEvolutionaryAlgorithm();
         evo.setConsoleOutput(false);
@@ -70,39 +71,90 @@ class ExampleEvolutionaryAlgorithmTest {
         //  Set up configuration list
         ArrayList<SetupConfig> configs = new ArrayList<SetupConfig>();
 
-        for (TestingMode m : TestingMode.values())
+        if (multiConfigTesting)
         {
-            switch (m) {
-                case Crossover:
-                    CrossoverTesting(evo, configs);
-                    break;
+            for (TestingMode m : TestingMode.values()) {
+                evo.setActivationFunctionVal(1.5);
+                switch (m) {
+                    case Crossover:
+                        //CrossoverTesting(evo, configs);
+                        break;
 
-                case Mutation:
-                    MutationTesting(evo, configs);
-                    break;
+                    case Mutation:
+                        //MutationTesting(evo, configs);
+                        break;
 
-                case Replacement:
-                    ReplacementTesting(evo, configs);
-                    break;
+                    case Replacement:
+                        //ReplacementTesting(evo, configs);
+                        break;
 
-                case Selection:
-                    SelectionTesting(evo, configs);
-                    break;
+                    case Selection:
+                        //SelectionTesting(evo, configs);
+                        break;
 
-                /*case ParameterTuning:
-                    shouldSort = true;
-                    evo.setCrossoverProcess(CrossoverProcess.RandomCrossover);
-                    evo.setMutationProcess(MutationProcess.Swap);
-                    evo.setReplacementProcess(ReplacementProcess.Tournament);
-                    evo.setSelectionProcess(SelectionProcess.Tournament);
+                    case SetupPermutationTesting:
+                        PermutationTesting(evo, configs);
+                        break;
 
-                    ParameterTuning(evo, configs);
-                    break;*/
+                    case ParameterTuning:
+//                        evo.setCrossoverProcess(CrossoverProcess.TwoPoint);
+//                        evo.setMutationProcess(MutationProcess.Change);
+//                        evo.setReplacementProcess(ReplacementProcess.Tournament);
+//                        evo.setSelectionProcess(SelectionProcess.Tournament);
+//
+//                        ParameterTuning(evo, configs);
+                        break;
+                }
 
-                case SetupPermutationTesting:
-                    PermutationTesting(evo, configs);
-                    break;
+                if (shouldSort) {//  Custom sorting method to compare all the configurations by fitness
+                    Collections.sort(configs, (o1, o2) -> {
+                        return Double.compare(o1.Fitness, o2.Fitness);
+                    });
+                }
+
+                if (!configs.isEmpty()) {//  Print best fitness and configuration
+                    System.out.println("Done! Best fitness found = " + configs.get(0).Fitness);
+                    System.out.println("Config - Pop = " + configs.get(0).Population + ", Hidden Layers = " + configs.get(0).HiddenLayers + ", Mutation Change = " + configs.get(0).MutationChange + ", Mutation Rate = " + configs.get(0).MutationRate);
+                    File directory = new File("ConfigLogs/" + m.toString());
+                    if (!directory.exists()) {
+                        directory.mkdir();
+                    }
+                    String fileToWrite = directory + "/configResults_"
+                            + "TestingMode-" + m.toString() + "_"
+                            + evo.getCrossoverProcess().toString() + "_"
+                            + evo.getMutationProcess().toString() + "_"
+                            + evo.getReplacementProcess().toString() + "_"
+                            + evo.getSelectionProcess().toString() + "_"
+                            + "NumberOfTestRuns-" + testRuns + "_"
+                            + "activationFunctionVal-" + evo.getActivationFunctionVal() + "_"
+                            + System.currentTimeMillis() + ".json";
+                    //gson.toJson(configs, new FileWriter(fileToWrite));
+
+                    try (JsonWriter writer = new JsonWriter(new FileWriter(fileToWrite))) {
+                        writer.beginArray();
+                        for (SetupConfig s : configs) {
+                            writer.beginObject();
+                            writer.name("CrossoverProcess").value(s.crossoverProcess.toString());
+                            writer.name("MutationProcess").value(s.mutationProcess.toString());
+                            writer.name("ReplacementProcess").value(s.replacementProcess.toString());
+                            writer.name("SelectionProcess").value(s.selectionProcess.toString());
+                            writer.name("Population").value(s.Population);
+                            writer.name("HiddenLayers").value(s.HiddenLayers);
+                            writer.name("MutationChange").value(s.MutationChange);
+                            writer.name("MutationRate").value(s.MutationRate);
+                            writer.name("Fitness").value(s.Fitness);
+                            writer.endObject();
+                        }
+                        writer.endArray();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                configs.clear();
             }
+        }
+        else {
+            OptimalSettingsTesting(evo, configs);
 
             if (shouldSort) {//  Custom sorting method to compare all the configurations by fitness
                 Collections.sort(configs, (o1, o2) -> {
@@ -110,21 +162,21 @@ class ExampleEvolutionaryAlgorithmTest {
                 });
             }
 
-            if (m != TestingMode.ParameterTuning)
-            {//  Print best fitness and configuration
+            if (!configs.isEmpty()) {//  Print best fitness and configuration
                 System.out.println("Done! Best fitness found = " + configs.get(0).Fitness);
                 System.out.println("Config - Pop = " + configs.get(0).Population + ", Hidden Layers = " + configs.get(0).HiddenLayers + ", Mutation Change = " + configs.get(0).MutationChange + ", Mutation Rate = " + configs.get(0).MutationRate);
-                File directory = new File("ConfigLogs");
+                File directory = new File("ConfigLogs/ConfigBurning");
                 if (!directory.exists()) {
                     directory.mkdir();
                 }
                 String fileToWrite = directory + "/configResults_"
-                        + "TestingMode-" + m.toString() + "_"
+                        + "TestingMode-FoundOptimumConfigurationTesting" + "_"
                         + evo.getCrossoverProcess().toString() + "_"
                         + evo.getMutationProcess().toString() + "_"
                         + evo.getReplacementProcess().toString() + "_"
                         + evo.getSelectionProcess().toString() + "_"
                         + "NumberOfTestRuns-" + testRuns + "_"
+                        + "activationFunctionVal-" + evo.getActivationFunctionVal() + "_"
                         + System.currentTimeMillis() + ".json";
                 //gson.toJson(configs, new FileWriter(fileToWrite));
 
@@ -326,6 +378,7 @@ class ExampleEvolutionaryAlgorithmTest {
                         evo.setCrossoverProcess(xp);
                         evo.setMutationProcess(mp);
                         evo.setReplacementProcess(rp);
+                        evo.setActivationFunctionVal(20);
                         ParamSetup(defaultPop, defaultHiddenLayers, defaultMC, defaultMR);
                         for (int i = 0; i < testRuns; ++i) {
                             double fitness = runningOrder(evo);
@@ -335,5 +388,30 @@ class ExampleEvolutionaryAlgorithmTest {
                 }
             }
         }
+    }
+
+    void OptimalSettingsTesting(ExampleEvolutionaryAlgorithm evo, ArrayList<SetupConfig> configs)
+    {
+        evo.setCrossoverProcess(CrossoverProcess.RandomCrossover);
+        evo.setMutationProcess(MutationProcess.Swap);
+        evo.setReplacementProcess(ReplacementProcess.Tournament);
+        evo.setSelectionProcess(SelectionProcess.Random);
+        evo.setActivationFunctionVal(42);
+        ParamSetup(Parameters.popSize, 5, Parameters.mutateChange, Parameters.mutateRate);
+        for (int i = 0; i < testRuns * 20; i++)
+        {
+            double fitness = runningOrder(evo);
+            configs.add(new SetupConfig(Parameters.popSize,
+                    5,
+                    Parameters.mutateChange,
+                    Parameters.mutateRate,
+                    fitness,
+                    evo.getCrossoverProcess(),
+                    evo.getMutationProcess(),
+                    evo.getReplacementProcess(),
+                    evo.getSelectionProcess())
+            );
+        }
+
     }
 }
