@@ -72,6 +72,10 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 	public void setSelectionProcess(SelectionProcess selectionProcess) {
 		this.selectionProcess = selectionProcess;
 	}
+
+	private double activationFunctionVal = 20.0;
+	public double getActivationFunctionVal() { return activationFunctionVal; }
+	public void setActivationFunctionVal(double activationFunctionVal) { this.activationFunctionVal = activationFunctionVal; }
 	
 	/**
 	 * The Main Evolutionary Loop
@@ -332,9 +336,13 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 			case Tournament:
 				for (Individual individual: individuals) {
 					Random rng = new Random();
-					int idx = rng.nextInt(population.size());
-					if (individual.fitness > population.get(idx).fitness) {
-						population.set(idx, individual);
+					for (int i = 0; i < 16; ++i)
+					{
+						int idx = rng.nextInt(population.size());
+						if (individual.fitness > population.get(idx).fitness) {
+							population.set(idx, individual);
+							break;
+						}
 					}
 				}
 				break;
@@ -374,9 +382,9 @@ public class ExampleEvolutionaryAlgorithm extends NeuralNetwork {
 
 	@Override
 	public double activationFunction(double x) {
-		if (x < -1.5) {
+		if (x < -activationFunctionVal) {
 			return -1.0;
-		} else if (x > 1.5) {
+		} else if (x > activationFunctionVal) {
 			return 1.0;
 		}
 		return Math.tanh(x);
