@@ -366,8 +366,7 @@ class ExampleEvolutionaryAlgorithmTest {
             configs.add(new SetupConfig(defaultPop, defaultHiddenLayers, defaultMC, defaultMR, fitness, evo.getCrossoverProcess(), evo.getMutationProcess(), evo.getReplacementProcess(), evo.getSelectionProcess()));
         }
     }
-
-    // lord have mercy on my soul
+    
     void PermutationTesting(ExampleEvolutionaryAlgorithm evo, ArrayList<SetupConfig> configs)
     {
         for (SelectionProcess sp : SelectionProcess.values()) {
