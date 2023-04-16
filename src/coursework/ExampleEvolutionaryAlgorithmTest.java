@@ -58,7 +58,7 @@ class ExampleEvolutionaryAlgorithmTest {
     void run() throws Exception {
         //  Configure processes used in EA
         boolean shouldSort = true;
-        boolean multiConfigTesting = true;
+        boolean multiConfigTesting = false;
 
         ExampleEvolutionaryAlgorithm evo = new ExampleEvolutionaryAlgorithm();
         evo.setConsoleOutput(false);
@@ -93,16 +93,16 @@ class ExampleEvolutionaryAlgorithmTest {
                         break;
 
                     case SetupPermutationTesting:
-                        PermutationTesting(evo, configs);
+                        //PermutationTesting(evo, configs);
                         break;
 
                     case ParameterTuning:
-//                        evo.setCrossoverProcess(CrossoverProcess.TwoPoint);
-//                        evo.setMutationProcess(MutationProcess.Change);
-//                        evo.setReplacementProcess(ReplacementProcess.Tournament);
-//                        evo.setSelectionProcess(SelectionProcess.Tournament);
-//
-//                        ParameterTuning(evo, configs);
+                        evo.setCrossoverProcess(CrossoverProcess.OnePoint);
+                        evo.setMutationProcess(MutationProcess.Change);
+                        evo.setReplacementProcess(ReplacementProcess.Tournament);
+                        evo.setSelectionProcess(SelectionProcess.Random);
+
+                        ParameterTuning(evo, configs);
                         break;
                 }
 
@@ -366,7 +366,7 @@ class ExampleEvolutionaryAlgorithmTest {
             configs.add(new SetupConfig(defaultPop, defaultHiddenLayers, defaultMC, defaultMR, fitness, evo.getCrossoverProcess(), evo.getMutationProcess(), evo.getReplacementProcess(), evo.getSelectionProcess()));
         }
     }
-    
+
     void PermutationTesting(ExampleEvolutionaryAlgorithm evo, ArrayList<SetupConfig> configs)
     {
         for (SelectionProcess sp : SelectionProcess.values()) {
@@ -391,13 +391,13 @@ class ExampleEvolutionaryAlgorithmTest {
 
     void OptimalSettingsTesting(ExampleEvolutionaryAlgorithm evo, ArrayList<SetupConfig> configs)
     {
-        evo.setCrossoverProcess(CrossoverProcess.RandomCrossover);
-        evo.setMutationProcess(MutationProcess.Swap);
-        evo.setReplacementProcess(ReplacementProcess.Tournament);
-        evo.setSelectionProcess(SelectionProcess.Random);
-        evo.setActivationFunctionVal(42);
+        evo.setCrossoverProcess(CrossoverProcess.OnePoint);
+        evo.setMutationProcess(MutationProcess.Change);
+        evo.setReplacementProcess(ReplacementProcess.Random);
+        evo.setSelectionProcess(SelectionProcess.Tournament);
+        evo.setActivationFunctionVal(20);
         ParamSetup(Parameters.popSize, 5, Parameters.mutateChange, Parameters.mutateRate);
-        for (int i = 0; i < testRuns * 20; i++)
+        for (int i = 0; i < testRuns; i++)
         {
             double fitness = runningOrder(evo);
             configs.add(new SetupConfig(Parameters.popSize,
